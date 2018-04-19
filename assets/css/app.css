@@ -1,0 +1,58 @@
+/* This file is for your main application css. */
+.app-name{
+    text-align: center;
+    font-family: 'Lobster', cursive;
+    font-size: 5em;
+}
+
+.message-header{
+    font-family: 'Satisfy', cursive;
+    float: left;
+}
+
+.messages{
+    font-family: 'Nanum Brush Script', cursive;
+    font-size: 1.4em;
+}
+
+.online-header{
+    font-family: 'Cute Font', cursive;
+}
+
+.online{
+    font-family: 'Gamja Flower', cursive;
+    font-size: 1.4em;
+}
+
+.page-header{
+    font-family: 'Oswald', sans-serif;
+    font-size: 3em;
+}
+
+.control-label{
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.button-text{
+    font-family: 'Concert One', cursive;
+}
+
+#link{
+    font-family: 'Marck Script', cursive;
+    font-size: 19px;
+}
+
+.alert-text{
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 20px;
+}
+
+.form-fill{
+    margin-left: 25%;
+    margin-right: 25%;
+}
+ 
+#inside-form{
+    padding-left: 25%;
+    padding-right: 25%;
+} 

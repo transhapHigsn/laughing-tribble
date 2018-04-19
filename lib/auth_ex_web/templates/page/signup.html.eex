@@ -1,0 +1,32 @@
+<span id="link"><%= link "Login", to: page_path(@conn, :index), method: :get%></span>
+<%= if @maybe_user == nil do %>
+  <%= form_for @changeset, @action, fn f -> %>
+<h2 class="page-header" style="text-align:center">Register Yourself</h2>
+<div class="form-fill">
+    <div id="inside-form">
+    <div class="form-group" style="width:200px">
+      <%= label f, :username, class: "control-label" %>
+      <%= text_input f, :username, class: "form-control" %>
+      <%= error_tag f, :username %>
+  </div>
+    <div class="form-group" style="width:200px">
+      <%= label f, :password, class: "control-label" %>
+      <%= password_input f, :password, class: "form-control" %>
+      <%= error_tag f, :password %>
+    </div>
+    <div class="form-group" style="width:200px">
+      <%= label f, :confirm_password, class: "control-label" %>
+      <%= password_input f, :password, class: "form-control" %>
+      <%= error_tag f, :password %>
+    </div>
+    <div class="form-group0" style="width:100px">
+      <%= submit "Submit", class: "btn btn-primary button-text" %>
+    </div>
+    </div>
+</div>
+  <% end %>
+<% else %>
+  <h1 style="text-align:center">Chat Room</h2>
+  <h2>Hello <%= @maybe_user.username%>!</h1>
+  <span id="link"><%= link "Logout", to: page_path(@conn, :logout), method: :post%></span>
+<% end %>

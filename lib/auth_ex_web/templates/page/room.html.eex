@@ -1,0 +1,25 @@
+<span id="link"><%= link "Logout", to: page_path(@conn, :logout), method: :post%></span>
+<div class="row">
+  <div class="col-md-12 alert alert-info">
+    <span id="User" class="alert-text"><%= @conn.params["user"] %></span>
+  </div>
+  
+  <div class="col-md-8">
+    <h2 class="message-header">Messages</h2>
+    <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
+    <ul id="MessageList" class="list-unstyled messages"></ul>
+  </div>
+  
+  <div  class="col-md-4">
+    <h2 class="online-header">Online Members</h2>
+    <ul id="UserList" class="list-unstyled online">
+      <li>Loading online users...</li>
+    </ul>
+  </div>
+
+</div>
+<div id="scrollArea" class="clusterize-scroll">
+    <ul id="contentArea" class="clusterize-content list-unstyled">
+    <li class="clusterize-no-data">Loading data…</li>
+    </ul>
+</div>
