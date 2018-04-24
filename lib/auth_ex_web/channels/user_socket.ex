@@ -2,8 +2,8 @@ defmodule AuthExWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", AuthExWeb.RoomChannel
-  channel "room:lobby", AuthExWeb.RoomChannel
+  channel "room:*", AuthExWeb.RoomChannel
+  # channel "room:lobby", AuthExWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

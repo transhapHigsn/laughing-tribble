@@ -3,10 +3,12 @@ defmodule AuthExWeb.RoomChannel do
   alias AuthExWeb.Presence
   use Timex
 
-  def join("room:lobby", payload, socket) do
+  def join("room:" <> room_id, payload, socket) do
     send(self, :after_join)
     if authorized?(payload) do
-      {:ok, socket}
+      channelName = "room.#{room_id}"
+      {:ok, %{channel: channelName}, assign(socket, :room_id, room_id)}
+      # {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -27,14 +29,17 @@ defmodule AuthExWeb.RoomChannel do
 
   def handle_in("message:new", message, socket) do
     local = Timex.local
+    room = Map.get(message, "room")
+    msg = Map.get(message, "message")
     username = socket.assigns.user
     payload = %{
-      message: message, 
-      username: username, 
+      message: msg, 
+      username: username,
+      room: room, 
       inserted_at: local, 
       updated_at: local
     }
-    AuthEx.Messages.changeset(%AuthEx.Messages{room: "room:lobby"}, payload)
+    AuthEx.Messages.changeset(%AuthEx.Messages{}, payload)
     |> AuthEx.Repo.insert
     broadcast! socket, "message:new", %{
       user: socket.assigns.user,

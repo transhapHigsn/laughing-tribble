@@ -35,13 +35,7 @@ defmodule AuthExWeb.Router do
   scope "/", AuthExWeb do
     pipe_through [:browser, :auth, :ensure_auth]
     get "/secret", PageController, :secret
-    get "/room", PageController, :room
-  end
-
-  scope "/", AuthExWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
+    get "/room/:room_id", PageController, :room
   end
 
   # Other scopes may use custom stacks.

@@ -7,7 +7,6 @@
   <div class="col-md-12">
     <h2 class="message-header">Messages</h2>
     <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
-    <%# <ul id="MessageList" class="list-unstyled messages"></ul> %>
   </div>
 
   <div class="message-user">

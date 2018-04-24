@@ -1,24 +1,6 @@
-// Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
 
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
 import "phoenix_html"
 
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-
-// import socket from "./socket"
 import {Socket, Presence} from  "phoenix"
 
 let user = document.getElementById("User").innerText
@@ -64,7 +46,17 @@ let render = (presences) => {
 }
 
 // Channels
-let room = socket.channel("room:lobby")
+let baseURI = window.location.href
+let params = baseURI.split('?')
+var roomId = 'lobby';
+if(params.length > 1){
+  let splitParam = params[0].split('/')
+  let splitParamLength = splitParam.length;
+  roomId = splitParam[splitParamLength-1];
+}
+
+let roomName = 'room:' + roomId
+let room = socket.channel(roomName)
 room.on("presence_state", state => {
   presences = Presence.syncState(presences, state)
   render(presences)
@@ -78,7 +70,7 @@ room.on("presence_diff", diff => {
 let messageInput = document.getElementById("NewMessage")
 messageInput.addEventListener("keypress", (e) => {
   if (e.keyCode == 13 && messageInput.value != "") {
-    room.push("message:new", messageInput.value)
+    room.push("message:new", {message: messageInput.value, room: roomId})
     messageInput.value = ""
   }
 })
@@ -117,8 +109,21 @@ let renderContent = (message) => {
   contentArea.scrollTop = contentArea.scrollHeight;
 }
 
-
-room.on("message:new", message => renderContent(message))
+room.on("message:new", message => {
+  console.log(message)
+  console.log(message.hasOwnProperty('body'))
+  let body = message.body
+  if (typeof(body) === 'object'){
+    let msgObj = {
+      'user': message.user,
+      'timestamp': message.timestamp,
+      'body': body.message
+    }
+    renderContent(msgObj)
+  } else {
+    renderContent(message)
+  }
+})
 room.on("reload", (message) => {
   contentArea.innerHTML = ``
   room.push("screen:reload", "Reload messages")

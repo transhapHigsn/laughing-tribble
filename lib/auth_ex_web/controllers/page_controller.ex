@@ -16,7 +16,6 @@
     end
 
     if maybe_user != nil do
-        username = Map.get(maybe_user, :username)
         conn
         |>redirect(to: "/login")
     else
@@ -41,7 +40,7 @@
     if maybe_user != nil do
         username = Map.get(maybe_user, :username)
         conn
-        |>redirect(to: "/room?user=#{username}")
+        |>redirect(to: "/room/lobby?user=#{username}")
     else
         conn
         |> put_flash(:info, message)
@@ -81,7 +80,7 @@
     conn
     |> put_flash(:success, "Welcome back!")
     |> Guardian.Plug.sign_in(user)
-    |> redirect(to: "/room?user=#{username}")
+    |> redirect(to: "/room/lobby?user=#{username}")
   end
 
   def logout(conn, _) do
@@ -94,7 +93,17 @@
     render(conn, "secret.html")
   end
 
+  def room(conn, %{"room_id" => room_id}) do
+    # render(conn, "room.html")
+    conn |> render_room(room_id)
+  end
+
   def room(conn, _params) do
-      render(conn, "room.html")
+    # render(conn, "room.html")
+    conn |> render_room("lobby")
+  end
+
+  defp render_room(conn, room_id) do
+    conn |> render("room.html", room_id: room_id)
   end
 end
