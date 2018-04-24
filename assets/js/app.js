@@ -97,34 +97,31 @@ let renderMessage = (message) => {
 
 let contentArea = document.getElementById("contentArea")
 let renderContent = (message) => {
-  // let prevElement = document.querySelector('#message')
-  // prevElement.removeAttribute('id')
   let messageElement = document.createElement("li")
   messageElement.setAttribute('class', 'clusterize-no-data')
   messageElement.setAttribute('id', 'message')
   messageElement.innerHTML = `
+    <img src="https://png.icons8.com/color/50/000000/circled-user-male-skin-type-4.png">
+    <div>
     <b>${message.user}</b>
     <i>${formatTimestamp(message.timestamp)}</i>
     <p>${message.body}</p>
+    </div>
     `
+
+  if (contentArea.hasChildNodes()){
+    contentArea.insertBefore(messageElement, contentArea.childNodes[0]);
+  } else {
   contentArea.appendChild(messageElement)
+  }
   contentArea.scrollTop = contentArea.scrollHeight;
-  // contentArea.focus()
 }
 
 
-room.on("message:new", message => renderMessage(message))
+room.on("message:new", message => renderContent(message))
 room.on("reload", (message) => {
   contentArea.innerHTML = ``
-  messageList.innerHTML = ``
   room.push("screen:reload", "Reload messages")
 })
-
-window.onload = () => {
-  console.log("Window reloading...")
-  messageList.innerHTML = ``
-  contentArea.innerHTML = ``
-
-}
 
 room.join()

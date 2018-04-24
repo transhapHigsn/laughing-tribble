@@ -15,6 +15,10 @@
     font-size: 1.4em;
 }
 
+#scrollArea{
+    margin-top: 20px;
+}
+
 .online-header{
     font-family: 'Cute Font', cursive;
 }
