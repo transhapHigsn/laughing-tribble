@@ -58,7 +58,7 @@
       {:ok, _user} ->
         conn
         |> put_flash(:info, "Registration successful")
-        |> redirect(to: "/login")
+        |> redirect(to: "/")
       {:error, changeset} ->
         render conn, "signup.html", changeset: changeset
     end

@@ -39,18 +39,25 @@ defmodule AuthExWeb.RoomChannel do
       inserted_at: local, 
       updated_at: local
     }
-    AuthEx.Messages.changeset(%AuthEx.Messages{}, payload)
-    |> AuthEx.Repo.insert
-    broadcast! socket, "message:new", %{
-      user: socket.assigns.user,
-      body: message,
-      timestamp: Timex.local
-    }
+    
+    check_room = AuthEx.Rooms.get_room?(room)
+
+    if check_room do
+      AuthEx.Messages.changeset(%AuthEx.Messages{}, payload)
+      |> AuthEx.Repo.insert
+      broadcast! socket, "message:new", %{
+        user: socket.assigns.user,
+        body: message,
+        timestamp: Timex.local
+      }
+    end
+
     {:noreply, socket}
   end
 
   def handle_in("screen:reload", _, socket) do
-      AuthEx.Messages.get_messages()
+      room = socket.assigns.room_id
+      AuthEx.Messages.get_messages_by_room(room)
       |> Enum.each(fn msg -> push(socket, "message:new", %{
         user: msg.username,
         body: msg.message,
