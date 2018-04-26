@@ -62,8 +62,8 @@
     end
   end
 
-  def login(conn, %{"user" => %{"username" => username, "password" => password}}) do
-    Auth.authenticate_user(username, password)
+  def login(conn, %{"user" => %{"email" => email, "password" => password}}) do
+    Auth.authenticate_user(email, password)
     |> login_reply(conn)
   end
 
