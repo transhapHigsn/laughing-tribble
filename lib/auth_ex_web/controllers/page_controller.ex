@@ -5,6 +5,7 @@
   alias AuthEx.Auth.User
   alias AuthEx.Auth.Guardian
   alias AuthEx.Repo
+  alias AuthEx.Rooms
 
   def index(conn, _params) do
     changeset = Auth.change_user(%User{})
@@ -26,9 +27,6 @@
   end
 
   def new(conn, _params) do
-    # maybe_user = Guardian.Plug.current_resource(conn)
-    # render conn, "signup.html", changeset: User.changeset(%User{}, %{})
-
     changeset = Auth.change_user(%User{})
     maybe_user = Guardian.Plug.current_resource(conn)
     message = if maybe_user != nil do
@@ -105,5 +103,34 @@
 
   defp render_room(conn, room_id) do
     conn |> render("room.html", room_id: room_id)
+  end
+
+  def create_room(conn, params) do
+    username = params["username"]
+    room_name = "random"
+    room_params = %{
+      participant: [],
+      name: room_name
+    }
+    
+    exists = Rooms.get_room?(room_name)
+    IO.puts(exists)
+    if exists do
+      conn
+      |> put_flash(:success, "Welcome back!")
+      |> redirect(to: "/room/#{room_name}")
+    else
+      IO.puts("creating new room")
+      create_new_room(room_params)
+      conn
+      |> put_flash(:success, "Room created successfully")
+      |> redirect(to: "/room/#{room_name}")
+    end
+  end
+
+  defp create_new_room(room_params) do
+    %Rooms{}
+    |> Rooms.changeset(room_params)
+    |> Repo.insert()
   end
 end

@@ -9,7 +9,5 @@ defmodule AuthEx.Repo.Migrations.UpdateMessageTable do
 
       timestamps()
     end
-
-end
-
+  end
 end
