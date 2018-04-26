@@ -18,7 +18,7 @@
 
     if maybe_user != nil do
         conn
-        |>redirect(to: "/login")
+        |>redirect(to: "/")
     else
         conn
         |> put_flash(:info, message)
@@ -105,31 +105,48 @@
     conn |> render("room.html", room_id: room_id)
   end
 
-  def create_room(conn, params) do
-    username = params["username"]
-    room_name = "random"
-    room_params = %{
-      participant: [],
-      name: room_name
-    }
-    
-    exists = Rooms.get_room?(room_name)
-    IO.puts(exists)
-    if exists do
+  def room_form(conn, _params) do
+    render(conn, "create_room.html")
+  end
+
+  def create_room(conn, _params) do
+    current_user = Guardian.Plug.current_resource(conn)
+    email = Map.get(current_user, :email)
+    username = Map.get(current_user, :username)
+    id = Map.get(current_user, :id)
+    input_email = conn.params["search"]["for"]
+    other_user = AuthEx.Repo.get_by(AuthEx.Auth.User, email: input_email)
+    if other_user == nil do
       conn
-      |> put_flash(:success, "Welcome back!")
-      |> redirect(to: "/room/#{room_name}")
+      |> put_flash(:error, "User does not exists")
+      |> redirect(to: "/room/lobby?user=#{username}")
     else
-      IO.puts("creating new room")
-      create_new_room(room_params)
-      conn
-      |> put_flash(:success, "Room created successfully")
-      |> redirect(to: "/room/#{room_name}")
+      other_user_id = Map.get(other_user, :id)
+      room_name = "#{id}_#{other_user_id}"
+      room_params = %{
+        participant: [email, input_email],
+        name: room_name
+      }
+    
+      exists = Rooms.get_room?(room_name)
+      IO.puts(exists)
+    
+      if exists do
+        conn
+        |> put_flash(:success, "Welcome back!")
+        |> redirect(to: "/room/#{room_name}?user=#{username}")
+      else
+        IO.puts("creating new room")
+        create_new_room(room_params)
+        conn
+        |> put_flash(:success, "Room created successfully")
+        |> redirect(to: "/room/#{room_name}?user=#{username}")
+      end
     end
   end
 
   defp create_new_room(room_params) do
-    %Rooms{}
+    %Rooms{status: "active"}
     |> Rooms.changeset(room_params)
     |> Repo.insert()
   end

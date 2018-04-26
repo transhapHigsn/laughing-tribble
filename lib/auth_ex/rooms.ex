@@ -13,8 +13,8 @@ defmodule AuthEx.Rooms do
     @doc false
     def changeset(rooms, attrs) do
       rooms
-      |> cast(attrs, [:name, :participant, :status, :inserted_at, :updated_at])
-      |> validate_required([:name, :participant, :inserted_at, :updated_at])
+      |> cast(attrs, [:name, :participant, :status])
+      |> validate_required([:name, :participant, :status])
     end
   
     def get_room?(room) do

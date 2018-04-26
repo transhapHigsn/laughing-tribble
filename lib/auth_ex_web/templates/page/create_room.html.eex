@@ -1,0 +1,9 @@
+<span id="link"><%= link "Room", to: "/room/lobby", method: :get%></span> &emsp;
+<div class="room-create">
+ <h2 class="page-header" style="text-align:center">Create New Room</h2>
+  <%= form_for @conn, page_path(@conn, :create_room), [as: :search, method: :post], fn f -> %>
+    <%= text_input f, :for %>
+    <%= submit "Create Room" %>
+  <% end %>  
+</div>
+
