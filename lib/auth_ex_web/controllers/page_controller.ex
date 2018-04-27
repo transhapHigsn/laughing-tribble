@@ -18,8 +18,9 @@
     end
 
     if maybe_user != nil do
+        username = Map.get(maybe_user, :username)
         conn
-        |>redirect(to: "/secret")
+        |>redirect(to: "/room/lobby?user=#{username}")
     else
         conn
         |> put_flash(:info, message)
@@ -48,18 +49,25 @@
   end
 
   def create(conn, %{"user" => user_params}) do
-    result=
-      %User{}
-      |> User.changeset(user_params)
-      |> Repo.insert()
+    input_email = Map.get(user_params, "email")
+    existing_user = AuthEx.Repo.get_by(AuthEx.Auth.User, email: input_email)
+    if existing_user == nil do
+      result=
+        %User{}
+        |> User.changeset(user_params)
+        |> Repo.insert()
 
-    case result do
-      {:ok, _user} ->
-        conn
-        |> put_flash(:info, "Registration successful")
-        |> redirect(to: "/")
-      {:error, changeset} ->
-        render conn, "signup.html", changeset: changeset
+      case result do
+        {:ok, _user} ->
+          conn
+          |> put_flash(:info, "Registration successful")
+          |> redirect(to: "/")
+        {:error, changeset} ->
+          render conn, "signup.html", changeset: changeset
+      end
+    else
+      conn
+      |> redirect(to: "/new")
     end
   end
 
@@ -120,7 +128,6 @@
   end
 
   defp render_room(conn, room_id) do
-
     conn |> render("room.html", room_id: room_id)
   end
 
