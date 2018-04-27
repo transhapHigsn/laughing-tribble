@@ -38,6 +38,7 @@ defmodule AuthExWeb.Router do
     get "/room/:room_id", PageController, :room
     get "/new_room", PageController, :room_form
     post "/new_room", PageController, :create_room
+    get "/rooms", PageController, :get_rooms
   end
 
   # Other scopes may use custom stacks.

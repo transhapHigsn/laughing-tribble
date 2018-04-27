@@ -1,4 +1,5 @@
 <span id="link"><%= link "Logout", to: page_path(@conn, :logout), method: :post%></span> &emsp;
+<span id="link"><%= link "Rooms", to: "/rooms", method: :get%></span> &emsp;
 <span id="link"><%= link "Create Room", to: "/new_room", method: :get%></span>
 <div class="row">
   <div class="col-md-12 alert alert-info">

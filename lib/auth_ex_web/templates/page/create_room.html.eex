@@ -1,5 +1,6 @@
-<span id="link"><%= link "Room", to: "/room/lobby", method: :get%></span> &emsp;
-<div class="room-create">
+<span id="link"><%= link "Logout", to: page_path(@conn, :logout), method: :post%></span> &emsp;
+<span id="link"><%= link "Lobby", to: "/room/lobby?user=#{@username}", method: :get%></span> &emsp;
+<div class="room-create jumbotron">
  <h2 class="page-header" style="text-align:center">Create New Room</h2>
   <%= form_for @conn, page_path(@conn, :create_room), [as: :search, method: :post], fn f -> %>
     <%= text_input f, :for %>
