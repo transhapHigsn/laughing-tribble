@@ -94,6 +94,23 @@
 
   def room(conn, %{"room_id" => room_id}) do
     # render(conn, "room.html")
+    current_user = Guardian.Plug.current_resource(conn)
+    email = Map.get(current_user, :email)
+    username = Map.get(current_user, :username)
+    if room_id != "lobby" do
+      room_name = AuthEx.Repo.get_by(AuthEx.Rooms, name: room_id)
+      if room_name != nil do
+        participant = Map.get(room_name, :participant)
+        member = Enum.member?(participant, email)
+        if member do
+          conn |> render_room(room_id)
+        else
+          conn |> put_flash(:error, "Unauthorized access") |> redirect(to: "/room/lobby?user=#{username}")
+        end
+      else
+        conn |> put_flash(:error, "Unauthorized access") |> redirect(to: "/room/lobby?user=#{username}")
+      end
+    end
     conn |> render_room(room_id)
   end
 
@@ -103,6 +120,7 @@
   end
 
   defp render_room(conn, room_id) do
+
     conn |> render("room.html", room_id: room_id)
   end
 
