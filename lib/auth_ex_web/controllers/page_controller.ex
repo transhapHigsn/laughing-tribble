@@ -51,6 +51,7 @@
   def create(conn, %{"user" => user_params}) do
     input_email = Map.get(user_params, "email")
     existing_user = AuthEx.Repo.get_by(AuthEx.Auth.User, email: input_email)
+    user_params = Map.put(user_params, "email", String.downcase(input_email))
     if existing_user == nil do
       result=
         %User{}
@@ -145,7 +146,8 @@
     username = Map.get(current_user, :username)
     id = Map.get(current_user, :id)
     input_email = conn.params["search"]["for"]
-    other_user = AuthEx.Repo.get_by(AuthEx.Auth.User, email: input_email)
+    lowercase_email = String.downcase(input_email)
+    other_user = AuthEx.Repo.get_by(AuthEx.Auth.User, email: lowercase_email)
     if other_user == nil do
       conn
       |> put_flash(:error, "User does not exists")
@@ -155,7 +157,7 @@
       room_name_1 = "#{id}_#{other_user_id}"
       room_name_2 = "#{other_user_id}_#{id}"
       room_params = %{
-        participant: [email, input_email],
+        participant: [email, lowercase_email],
         name: room_name_1
       }
 

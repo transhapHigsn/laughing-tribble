@@ -104,7 +104,8 @@ defmodule AuthEx.Auth do
 
   alias Comeonin.Bcrypt
   def authenticate_user(email, plain_text_password) do
-    query = from u in User, where: u.email == ^email
+    lowercase_email = String.downcase(email)
+    query = from u in User, where: u.email == ^lowercase_email
     Repo.one(query)
     |> check_password(plain_text_password)
   end
